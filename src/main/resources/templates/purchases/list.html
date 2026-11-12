@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Purchases')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+
+<main class="page">
+    <p th:replace="~{fragments/layout :: flash}"></p>
+
+    <div class="page-head">
+        <div>
+            <h1>Purchases</h1>
+            <p class="subtitle">
+                <span th:text="|${page.totalElements} purchases|">12 purchases</span>
+                <span th:unless="${endingSoon.isEmpty()}"
+                      th:text="| · ${endingSoon.size()} warranties end in the next 30 days|"></span>
+            </p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/purchases/new}">Add purchase</a>
+    </div>
+
+    <section th:unless="${endingSoon.isEmpty()}" aria-labelledby="ending-soon">
+        <h2 id="ending-soon" class="section-label">Ending soon</h2>
+        <div class="soon">
+            <a th:each="row : ${endingSoon}" th:href="@{/purchases/{id}(id=${row.id})}">
+                [[${row.name}]]
+                <span th:text="${row.daysLeft == 0} ? 'Ends today' : |${row.daysLeft} days left|">12 days left</span>
+            </a>
+        </div>
+    </section>
+
+    <form class="filters" th:action="@{/purchases}" method="get" role="search">
+        <div class="field grow">
+            <label for="q">Search</label>
+            <input id="q" type="search" name="q" th:value="${q}" placeholder="Item name">
+        </div>
+        <div class="field">
+            <label for="storeId">Store</label>
+            <select id="storeId" name="storeId">
+                <option value="">All stores</option>
+                <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.name}"
+                        th:selected="${store.id == storeId}">Alta</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="tagId">Tag</label>
+            <select id="tagId" name="tagId">
+                <option value="">All tags</option>
+                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"
+                        th:selected="${tag.id == tagId}">Home</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="sort">Sort</label>
+            <select id="sort" name="sort">
+                <option value="purchaseDate,desc" th:selected="${sort == 'purchaseDate,desc'}">Newest first</option>
+                <option value="purchaseDate,asc" th:selected="${sort == 'purchaseDate,asc'}">Oldest first</option>
+                <option value="price,desc" th:selected="${sort == 'price,desc'}">Price, high to low</option>
+                <option value="price,asc" th:selected="${sort == 'price,asc'}">Price, low to high</option>
+                <option value="warrantyUntil,asc" th:selected="${sort == 'warrantyUntil,asc'}">Warranty ends soonest</option>
+            </select>
+        </div>
+        <button class="btn btn-sm" type="submit">Apply</button>
+    </form>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Store</th>
+                <th scope="col">Tags</th>
+                <th scope="col">Bought</th>
+                <th scope="col" class="num">Price</th>
+                <th scope="col">Warranty until</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${page.content}">
+                <td><a th:href="@{/purchases/{id}(id=${row.id})}" th:text="${row.name}">MacBook Air</a></td>
+                <td class="muted" th:text="${row.storeName}">Zoommer</td>
+                <td class="muted" th:text="${row.tagNames}">Electronics</td>
+                <td class="muted" th:insert="~{fragments/layout :: date(${row.purchaseDate})}"></td>
+                <td class="num" th:insert="~{fragments/layout :: money(${row.price})}"></td>
+                <td th:classappend="${row.endingSoon()} ? 'warn' : (${row.expired()} ? 'faint')"
+                    th:insert="~{fragments/layout :: date(${row.warrantyUntil})}"></td>
+            </tr>
+            <tr th:if="${page.content.isEmpty()}">
+                <td colspan="6" class="empty">No purchases match these filters.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="pager" aria-label="Pagination" th:if="${page.totalPages > 1}">
+        <span th:text="|Showing ${page.number * page.size + 1}-${page.number * page.size + page.numberOfElements} of ${page.totalElements}|">Showing 1-10 of 12</span>
+        <div class="pager-links">
+            <th:block th:if="${page.hasPrevious()}" th:insert="~{:: pageLink(${page.number - 1}, 'Previous')}"></th:block>
+            <span th:unless="${page.hasPrevious()}" class="disabled">Previous</span>
+
+            <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                <span th:if="${i == page.number}" class="current" aria-current="page" th:text="${i + 1}">1</span>
+                <th:block th:unless="${i == page.number}" th:insert="~{:: pageLink(${i}, ${i + 1})}"></th:block>
+            </th:block>
+
+            <th:block th:if="${page.hasNext()}" th:insert="~{:: pageLink(${page.number + 1}, 'Next')}"></th:block>
+            <span th:unless="${page.hasNext()}" class="disabled">Next</span>
+        </div>
+    </nav>
+</main>
+
+<th:block th:if="false">
+    <a th:fragment="pageLink(number, label)" th:text="${label}"
+       th:href="@{/purchases(q=${q}, storeId=${storeId}, tagId=${tagId}, sort=${sort}, page=${number})}">2</a>
+</th:block>
+</body>
+</html>

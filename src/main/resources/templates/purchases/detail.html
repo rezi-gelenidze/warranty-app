@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${purchase.name})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+
+<main class="page" th:with="until=${#temporals.format(summary.warrantyUntil, 'dd MMM yyyy')}">
+    <a class="back" th:href="@{/purchases}">← All purchases</a>
+    <p th:replace="~{fragments/layout :: flash}"></p>
+
+    <div class="page-head">
+        <div>
+            <h1 th:text="${purchase.name}">Bosch dishwasher</h1>
+            <p class="subtitle warn" th:if="${summary.endingSoon()}"
+               th:text="|Warranty ends ${until} · ${summary.daysLeft} days left|">Warranty ends soon</p>
+            <p class="subtitle" th:if="${summary.expired()}" th:text="|Warranty ended ${until}|">Warranty ended</p>
+            <p class="subtitle" th:unless="${summary.endingSoon() or summary.expired()}"
+               th:text="|Warranty until ${until}|">Warranty until</p>
+        </div>
+        <div class="actions">
+            <a class="btn" th:href="@{/purchases/{id}/edit(id=${purchase.id})}">Edit</a>
+            <form th:action="@{/purchases/{id}(id=${purchase.id})}" th:method="delete"
+                  onsubmit="return confirm('Delete this purchase and all its files?');">
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="columns">
+        <section class="card side stack" aria-labelledby="details">
+            <h2 id="details">Details</h2>
+            <dl>
+                <div><dt>Store</dt><dd th:text="${purchase.store.name}">Alta</dd></div>
+                <div><dt>Price</dt><dd th:insert="~{fragments/layout :: money(${purchase.price})}"></dd></div>
+                <div><dt>Bought</dt><dd th:insert="~{fragments/layout :: date(${purchase.purchaseDate})}"></dd></div>
+                <div><dt>Warranty</dt><dd th:text="${purchase.warrantyMonths == 0} ? 'None' : |${purchase.warrantyMonths} months|">24 months</dd></div>
+                <div class="wide"><dt>Tags</dt><dd th:text="${summary.tagNames.isEmpty()} ? 'None' : ${summary.tagNames}">Home</dd></div>
+                <div class="wide" th:if="${purchase.notes}"><dt>Notes</dt><dd th:text="${purchase.notes}">Notes</dd></div>
+            </dl>
+        </section>
+
+        <section class="card main stack" aria-labelledby="documents">
+            <h2 id="documents">Documents</h2>
+
+            <ul class="docs" th:unless="${documents.isEmpty()}">
+                <li th:each="doc : ${documents}"
+                    th:with="docUrl=@{/purchases/{p}/documents/{d}(p=${purchase.id}, d=${doc.id})}">
+                    <div>
+                        <a th:href="${docUrl}" target="_blank" th:text="${doc.originalName}">receipt.pdf</a>
+                        <span class="small muted"
+                              th:text="|${doc.type.label} · ${doc.sizeBytes / 1024} KB · added ${#temporals.format(doc.uploadedAt, 'dd MMM yyyy')}|">Receipt</span>
+                    </div>
+                    <form th:action="${docUrl}" th:method="delete">
+                        <button class="btn btn-quiet btn-sm" type="submit" th:aria-label="|Remove ${doc.originalName}|">Remove</button>
+                    </form>
+                </li>
+            </ul>
+            <p class="small muted flush" th:if="${documents.isEmpty()}">No files yet. Upload the receipt or warranty card.</p>
+
+            <form class="upload" th:action="@{/purchases/{id}/documents(id=${purchase.id})}" method="post"
+                  enctype="multipart/form-data">
+                <p class="alert alert-error" th:if="${uploadError}" th:text="${uploadError}" role="alert">Error</p>
+                <div class="upload-row">
+                    <div class="field grow">
+                        <label for="file">File</label>
+                        <input id="file" type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="field">
+                        <label for="type">Type</label>
+                        <select id="type" name="type">
+                            <option th:each="t : ${documentTypes}" th:value="${t}" th:text="${t.label}">Receipt</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-sm" type="submit">Upload</button>
+                </div>
+                <p class="small muted flush">PDF, JPG or PNG, up to 10 MB.</p>
+            </form>
+        </section>
+    </div>
+</main>
+</body>
+</html>

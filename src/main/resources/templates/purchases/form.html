@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:with="isNew=${purchaseId == null},
+               title=${isNew} ? 'Add purchase' : 'Edit purchase',
+               backUrl=${isNew} ? @{/purchases} : @{/purchases/{id}(id=${purchaseId})}">
+<head th:replace="~{fragments/layout :: head(${title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+
+<main class="page page-narrow">
+    <a class="back" th:href="${backUrl}">← Back</a>
+    <h1 th:text="${title}">Add purchase</h1>
+
+    <p class="alert alert-error" role="alert" th:if="${#fields.hasErrors('${purchase.*}')}">
+        Fix the fields marked below.</p>
+
+    <form class="card stack" th:object="${purchase}" novalidate
+          th:action="${isNew} ? @{/purchases} : @{/purchases/{id}(id=${purchaseId})}"
+          th:method="${isNew} ? 'post' : 'put'">
+
+        <div class="field">
+            <label for="name">Item name</label>
+            <input th:field="*{name}" th:errorclass="invalid" maxlength="120">
+            <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Required.</p>
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                <label for="storeId">Store</label>
+                <select th:field="*{storeId}" th:errorclass="invalid">
+                    <option value="">Choose a store</option>
+                    <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.name}">Alta</option>
+                </select>
+                <p class="error" th:if="${#fields.hasErrors('storeId')}" th:errors="*{storeId}">Required.</p>
+            </div>
+            <div class="field">
+                <label for="price">Price (₾)</label>
+                <input th:field="*{price}" th:errorclass="invalid" inputmode="decimal">
+                <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Invalid.</p>
+            </div>
+            <div class="field">
+                <label for="purchaseDate">Purchase date</label>
+                <input type="date" th:field="*{purchaseDate}" th:errorclass="invalid">
+                <p class="error" th:if="${#fields.hasErrors('purchaseDate')}" th:errors="*{purchaseDate}">Invalid.</p>
+            </div>
+            <div class="field">
+                <label for="warrantyMonths">Warranty (months)</label>
+                <input type="number" min="0" max="120" th:field="*{warrantyMonths}" th:errorclass="invalid">
+                <p class="error" th:if="${#fields.hasErrors('warrantyMonths')}" th:errors="*{warrantyMonths}">Invalid.</p>
+            </div>
+        </div>
+
+        <fieldset>
+            <legend>Tags</legend>
+            <div class="checks">
+                <label class="check" th:each="tag : ${tags}">
+                    <input type="checkbox" th:field="*{tagIds}" th:value="${tag.id}">
+                    <span th:text="${tag.name}">Home</span>
+                </label>
+            </div>
+        </fieldset>
+
+        <div class="field">
+            <label for="notes">Notes <span class="optional">(optional)</span></label>
+            <textarea th:field="*{notes}" th:errorclass="invalid" rows="3" maxlength="1000"></textarea>
+            <p class="error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}">Too long.</p>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-quiet" th:href="${backUrl}">Cancel</a>
+            <button class="btn btn-primary" type="submit">Save purchase</button>
+        </div>
+    </form>
+    <p class="small muted flush" th:if="${isNew}">Add receipts and warranty files after saving, on the purchase page.</p>
+</main>
+</body>
+</html>

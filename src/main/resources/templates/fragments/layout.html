@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${title} · Warranty Vault|">Warranty Vault</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<header th:fragment="topbar" class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" th:href="@{/purchases}">Warranty Vault</a>
+        <nav><a th:href="@{/purchases}">Purchases</a></nav>
+    </div>
+</header>
+
+<p th:fragment="flash" th:if="${success}" class="alert alert-success" role="status" th:text="${success}">Saved.</p>
+
+<th:block th:fragment="date(value)" th:text="${#temporals.format(value, 'dd MMM yyyy')}">01 Jan 2026</th:block>
+
+<th:block th:fragment="money(value)" th:text="|₾${#numbers.formatDecimal(value, 1, 'COMMA', 2, 'POINT')}|">₾0.00</th:block>
+
+</body>
+</html>
