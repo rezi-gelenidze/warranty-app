@@ -8,6 +8,7 @@ import com.warrantyvault.exception.InvalidFileException;
 import com.warrantyvault.exception.NotFoundException;
 import com.warrantyvault.repository.DocumentRepository;
 import com.warrantyvault.repository.PurchaseRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DocumentService {
 
@@ -31,13 +33,6 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final PurchaseRepository purchaseRepository;
     private final StorageService storageService;
-
-    public DocumentService(DocumentRepository documentRepository, PurchaseRepository purchaseRepository,
-                           StorageService storageService) {
-        this.documentRepository = documentRepository;
-        this.purchaseRepository = purchaseRepository;
-        this.storageService = storageService;
-    }
 
     public List<Document> findForPurchase(Long purchaseId) {
         return documentRepository.findByPurchaseIdOrderByUploadedAtDesc(purchaseId);

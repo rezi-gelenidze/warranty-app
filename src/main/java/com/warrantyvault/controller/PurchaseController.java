@@ -7,6 +7,7 @@ import com.warrantyvault.entity.Purchase;
 import com.warrantyvault.service.DocumentService;
 import com.warrantyvault.service.PurchaseService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,15 +27,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 
 @Controller
+@RequiredArgsConstructor
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
     private final DocumentService documentService;
-
-    public PurchaseController(PurchaseService purchaseService, DocumentService documentService) {
-        this.purchaseService = purchaseService;
-        this.documentService = documentService;
-    }
 
     @GetMapping("/")
     public String home() {

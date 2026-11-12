@@ -10,10 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Document {
 
     @Id
@@ -43,9 +48,6 @@ public class Document {
     @Column(nullable = false, updatable = false)
     private Instant uploadedAt = Instant.now();
 
-    protected Document() {
-    }
-
     public Document(Purchase purchase, DocumentType type, String originalName, String objectKey,
                     String contentType, long sizeBytes) {
         this.purchase = purchase;
@@ -54,37 +56,5 @@ public class Document {
         this.objectKey = objectKey;
         this.contentType = contentType;
         this.sizeBytes = sizeBytes;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Purchase getPurchase() {
-        return purchase;
-    }
-
-    public DocumentType getType() {
-        return type;
-    }
-
-    public String getOriginalName() {
-        return originalName;
-    }
-
-    public String getObjectKey() {
-        return objectKey;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public long getSizeBytes() {
-        return sizeBytes;
-    }
-
-    public Instant getUploadedAt() {
-        return uploadedAt;
     }
 }

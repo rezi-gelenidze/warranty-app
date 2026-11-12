@@ -82,7 +82,7 @@ Store 1 ──── * Purchase * ──── * Tag
 |---|---|
 | Layered packages | `controller`, `service`, `repository`, `entity` |
 | Stereotype annotations | `@Controller`, `@Service`, `@Repository`, `@Configuration`, `@ControllerAdvice` |
-| Constructor injection only | every service and controller, no `@Autowired` fields |
+| Constructor injection only | `final` fields with Lombok `@RequiredArgsConstructor` in every service and controller, no `@Autowired` anywhere |
 | 3+ entities | `Store`, `Purchase`, `Tag`, `Document` |
 | `@ManyToOne` | `Purchase.store`, `Document.purchase` |
 | `@ManyToMany` | `Purchase.tags` (join table `purchase_tag`) |

@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -18,6 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class PurchaseForm {
 
     private static final int DEFAULT_WARRANTY_MONTHS = 24;
@@ -68,59 +72,7 @@ public class PurchaseForm {
         return form;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public LocalDate getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(LocalDate purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public Integer getWarrantyMonths() {
-        return warrantyMonths;
-    }
-
-    public void setWarrantyMonths(Integer warrantyMonths) {
-        this.warrantyMonths = warrantyMonths;
-    }
-
-    public Set<Long> getTagIds() {
-        return tagIds;
-    }
-
     public void setTagIds(Set<Long> tagIds) {
         this.tagIds = tagIds == null ? new HashSet<>() : tagIds;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 }

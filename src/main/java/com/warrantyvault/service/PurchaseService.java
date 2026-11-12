@@ -11,6 +11,7 @@ import com.warrantyvault.repository.DocumentRepository;
 import com.warrantyvault.repository.PurchaseRepository;
 import com.warrantyvault.repository.StoreRepository;
 import com.warrantyvault.repository.TagRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PurchaseService {
 
@@ -35,16 +37,6 @@ public class PurchaseService {
     private final TagRepository tagRepository;
     private final DocumentRepository documentRepository;
     private final StorageService storageService;
-
-    public PurchaseService(PurchaseRepository purchaseRepository, StoreRepository storeRepository,
-                           TagRepository tagRepository, DocumentRepository documentRepository,
-                           StorageService storageService) {
-        this.purchaseRepository = purchaseRepository;
-        this.storeRepository = storeRepository;
-        this.tagRepository = tagRepository;
-        this.documentRepository = documentRepository;
-        this.storageService = storageService;
-    }
 
     public Page<PurchaseRow> search(String query, Long storeId, Long tagId, Pageable pageable) {
         LocalDate today = LocalDate.now();

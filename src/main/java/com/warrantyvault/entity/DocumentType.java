@@ -1,5 +1,10 @@
 package com.warrantyvault.entity;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum DocumentType {
 
     RECEIPT("Receipt"),
@@ -8,12 +13,4 @@ public enum DocumentType {
     OTHER("Other");
 
     private final String label;
-
-    DocumentType(String label) {
-        this.label = label;
-    }
-
-    public String getLabel() {
-        return label;
-    }
 }

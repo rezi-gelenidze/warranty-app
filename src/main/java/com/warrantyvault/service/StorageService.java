@@ -3,8 +3,8 @@ package com.warrantyvault.service;
 import com.warrantyvault.config.StorageProperties;
 import com.warrantyvault.exception.StorageException;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -19,17 +19,12 @@ import java.io.InputStream;
 import java.util.List;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class StorageService {
-
-    private static final Logger log = LoggerFactory.getLogger(StorageService.class);
 
     private final S3Client s3;
     private final StorageProperties properties;
-
-    public StorageService(S3Client s3, StorageProperties properties) {
-        this.s3 = s3;
-        this.properties = properties;
-    }
 
     @PostConstruct
     void createBucketIfMissing() {

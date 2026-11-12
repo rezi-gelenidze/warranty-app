@@ -3,6 +3,7 @@ package com.warrantyvault.repository;
 import com.warrantyvault.entity.Purchase;
 import com.warrantyvault.entity.Store;
 import com.warrantyvault.entity.Tag;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -25,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Testcontainers
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@RequiredArgsConstructor
 class PurchaseRepositoryTest {
 
     @Container
@@ -38,13 +40,6 @@ class PurchaseRepositoryTest {
     private Store store;
     private Tag phones;
     private Tag gifts;
-
-    PurchaseRepositoryTest(PurchaseRepository purchaseRepository, StoreRepository storeRepository,
-                           TagRepository tagRepository) {
-        this.purchaseRepository = purchaseRepository;
-        this.storeRepository = storeRepository;
-        this.tagRepository = tagRepository;
-    }
 
     @BeforeEach
     void setUp() {

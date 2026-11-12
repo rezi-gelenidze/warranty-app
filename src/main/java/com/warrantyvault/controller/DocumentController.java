@@ -4,6 +4,7 @@ import com.warrantyvault.dto.DocumentFile;
 import com.warrantyvault.entity.DocumentType;
 import com.warrantyvault.exception.InvalidFileException;
 import com.warrantyvault.service.DocumentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -21,13 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.nio.charset.StandardCharsets;
 
 @Controller
+@RequiredArgsConstructor
 public class DocumentController {
 
     private final DocumentService documentService;
-
-    public DocumentController(DocumentService documentService) {
-        this.documentService = documentService;
-    }
 
     @PostMapping("/purchases/{purchaseId}/documents")
     public String upload(@PathVariable Long purchaseId,

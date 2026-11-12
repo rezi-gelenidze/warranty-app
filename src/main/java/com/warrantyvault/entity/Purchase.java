@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
@@ -19,6 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Purchase {
 
     @Id
@@ -57,9 +61,6 @@ public class Purchase {
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
-    public Purchase() {
-    }
-
     public void update(String name, BigDecimal price, LocalDate purchaseDate, int warrantyMonths,
                        String notes, Store store, Set<Tag> tags) {
         this.name = name;
@@ -71,45 +72,5 @@ public class Purchase {
         this.store = store;
         this.tags.clear();
         this.tags.addAll(tags);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public LocalDate getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public int getWarrantyMonths() {
-        return warrantyMonths;
-    }
-
-    public LocalDate getWarrantyUntil() {
-        return warrantyUntil;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public Store getStore() {
-        return store;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
     }
 }
