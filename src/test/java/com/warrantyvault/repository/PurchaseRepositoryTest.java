@@ -5,12 +5,12 @@ import com.warrantyvault.entity.Store;
 import com.warrantyvault.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.TestConstructor;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -24,24 +24,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Testcontainers
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class PurchaseRepositoryTest {
 
     @Container
     @ServiceConnection
     static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18-alpine");
 
-    @Autowired
-    private PurchaseRepository purchaseRepository;
-
-    @Autowired
-    private StoreRepository storeRepository;
-
-    @Autowired
-    private TagRepository tagRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final StoreRepository storeRepository;
+    private final TagRepository tagRepository;
 
     private Store store;
     private Tag phones;
     private Tag gifts;
+
+    PurchaseRepositoryTest(PurchaseRepository purchaseRepository, StoreRepository storeRepository,
+                           TagRepository tagRepository) {
+        this.purchaseRepository = purchaseRepository;
+        this.storeRepository = storeRepository;
+        this.tagRepository = tagRepository;
+    }
 
     @BeforeEach
     void setUp() {
