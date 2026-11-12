@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: warranty-app
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:warranty}
+    username: ${DB_USER:warranty}
+    password: ${DB_PASSWORD:warranty}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 50
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+  tomcat:
+    max-swallow-size: 50MB
+
+storage:
+  endpoint: ${S3_ENDPOINT:http://localhost:9000}
+  region: ${S3_REGION:us-east-1}
+  bucket: ${S3_BUCKET:warranty-documents}
+  access-key: ${S3_ACCESS_KEY:rustfsadmin}
+  secret-key: ${S3_SECRET_KEY:rustfsadmin}
+  create-bucket: ${S3_CREATE_BUCKET:false}
